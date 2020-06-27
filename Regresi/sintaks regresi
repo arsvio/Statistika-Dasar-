@@ -1,0 +1,26 @@
+library(lmtest)
+library(car)
+# Membaca dan mendefinisikan variabel
+
+datareg = read.csv(file.choose())
+
+# Mendefinisikan variabel
+gdp = datareg$GDP
+inflasi = datareg$Inflasi
+birate = datareg$BI.rate
+jkii = datareg$JKII
+
+regresi = lm(jkii~gdp+inflasi+birate, data = datareg)
+summary(regresi)
+
+# Uji normalitas residual
+shapiro.test(regresi$residuals) # H0: berdistribusi normal; hasil: residual normal
+
+# Uji autokorelasi
+dwtest(regresi) # H0: tidak terjadi autokorelasi
+
+# Uji homogenitas 
+bptest(regresi, studentize = FALSE, data = datareg) # H0: error homogen (variansi error sama)
+
+# Multikolinearitas
+vif(regresi) # VIF kurang dari 10 berarti tidak ada korelasi dg peubah bebas lainnya
